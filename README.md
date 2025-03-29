@@ -12,6 +12,20 @@ MainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
 MainFrame.Active = true
 MainFrame.Draggable = true
 
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = MainFrame
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+CloseButton.Position = UDim2.new(1, -20, 0, 0)
+CloseButton.Size = UDim2.new(0, 20, 0, 20)
+CloseButton.Font = Enum.Font.SourceSans
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
 local ScrollingFrame = Instance.new("ScrollingFrame")
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.Size = UDim2.new(1, 0, 1, -40)
@@ -39,6 +53,9 @@ LogoButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 LogoButton.Visible = true
 LogoButton.Active = true
 LogoButton.Draggable = true
+LogoButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+end)
 
 local function createButton(name, callback)
     local Button = Instance.new("TextButton")
@@ -100,13 +117,13 @@ createButton("God Mode", function(isActive)
 end)
 
 createButton("Infinity Jump", function(isActive)
+    local jumpConnection
     if isActive then
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 100
-        game:GetService("UserInputService").JumpRequest:Connect(function()
+        jumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
             game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
         end)
     else
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+        if jumpConnection then jumpConnection:Disconnect() end
     end
 end)
 
